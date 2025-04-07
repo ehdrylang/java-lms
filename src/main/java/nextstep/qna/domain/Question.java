@@ -4,6 +4,7 @@ import nextstep.users.domain.NsUser;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Question {
@@ -22,6 +23,8 @@ public class Question {
     private LocalDateTime createdDate = LocalDateTime.now();
 
     private LocalDateTime updatedDate;
+
+    private LocalDateTime deletedDate;
 
     public Question() {
     }
@@ -72,9 +75,10 @@ public class Question {
         return writer.equals(loginUser);
     }
 
-    public Question setDeleted(boolean deleted) {
-        this.deleted = deleted;
-        return this;
+    public void delete(LocalDateTime deletedDate) {
+        this.deleted = true;
+        this.answers.forEach(Answer::delete);
+        this.deletedDate = deletedDate;
     }
 
     public boolean isDeleted() {
@@ -82,11 +86,24 @@ public class Question {
     }
 
     public List<Answer> getAnswers() {
-        return answers;
+        return Collections.unmodifiableList(answers);
+    }
+
+    public LocalDateTime deletedDate() {
+        return deletedDate;
     }
 
     @Override
     public String toString() {
         return "Question [id=" + getId() + ", title=" + title + ", contents=" + contents + ", writer=" + writer + "]";
+    }
+
+    public boolean hasOtherUserAnswers() {
+        for (Answer answer : answers) {
+            if (!answer.isOwner(writer)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
