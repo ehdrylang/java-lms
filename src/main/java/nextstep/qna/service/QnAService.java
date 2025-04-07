@@ -32,13 +32,8 @@ public class QnAService {
         if (question.hasOtherUserAnswers()) {
             throw new CannotDeleteException("다른 사람이 쓴 답변이 있어 삭제할 수 없습니다.");
         }
-        List<Answer> answers = question.getAnswers();
-        List<DeleteHistory> deleteHistories = new ArrayList<>();
-        question.delete();
-        deleteHistories.add(new DeleteHistory(ContentType.QUESTION, questionId, question.getWriter(), LocalDateTime.now()));
-        for (Answer answer : answers) {
-            deleteHistories.add(new DeleteHistory(ContentType.ANSWER, answer.getId(), answer.getWriter(), LocalDateTime.now()));
-        }
+        question.delete(LocalDateTime.now());
+        List<DeleteHistory> deleteHistories = DeleteHistory.of(question);
         deleteHistoryService.saveAll(deleteHistories);
     }
 }
