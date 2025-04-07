@@ -47,9 +47,8 @@ public class Answer {
         return id;
     }
 
-    public Answer delete() {
+    public void delete() {
         this.deleted = true;
-        return this;
     }
 
     public boolean isDeleted() {
