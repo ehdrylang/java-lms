@@ -1,5 +1,6 @@
 package nextstep.qna.domain;
 
+import nextstep.qna.CannotDeleteException;
 import nextstep.users.domain.NsUser;
 
 import java.time.LocalDateTime;
@@ -88,5 +89,14 @@ public class Question {
     @Override
     public String toString() {
         return "Question [id=" + getId() + ", title=" + title + ", contents=" + contents + ", writer=" + writer + "]";
+    }
+
+    public boolean hasOtherUserAnswers() {
+        for (Answer answer : answers) {
+            if (!answer.isOwner(writer)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
