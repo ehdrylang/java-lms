@@ -72,10 +72,6 @@ public class Question {
         answers.add(answer);
     }
 
-    private boolean isOwner(NsUser loginUser) {
-        return writer.equals(loginUser);
-    }
-
     public void delete(NsUser loginUser) {
         if (!isOwner(loginUser)) {
             throw new CannotDeleteException("질문을 삭제할 권한이 없습니다.");
@@ -86,6 +82,10 @@ public class Question {
         this.deleted = true;
         this.deletedDate = LocalDateTime.now();
         this.answers.forEach(Answer::delete);
+    }
+
+    private boolean isOwner(NsUser loginUser) {
+        return writer.equals(loginUser);
     }
 
     public boolean isDeleted() {
