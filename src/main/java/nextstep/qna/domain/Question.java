@@ -106,11 +106,6 @@ public class Question {
     }
 
     private boolean hasOtherUserAnswers() {
-        for (Answer answer : answers) {
-            if (!answer.isOwner(writer)) {
-                return true;
-            }
-        }
-        return false;
+        return answers.stream().anyMatch(it -> !it.isOwner(writer));
     }
 }
